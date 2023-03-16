@@ -19,6 +19,8 @@ struct ContentView: View {
     }
 }
 
+//gitコメントを追加する
+
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
