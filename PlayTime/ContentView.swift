@@ -12,7 +12,7 @@ struct Player: Hashable {
     var id = UUID()
     var number: Int
     var name: String
-    var flags: Bool = false
+    var flags: Bool = false 
 }
 
 let players = [
