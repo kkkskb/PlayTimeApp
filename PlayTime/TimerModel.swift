@@ -25,10 +25,11 @@ class TimerModel: ObservableObject{
             .sink(receiveValue: ({_ in
                 self.count += 1
             }))
+//        print("timer loading!")
     }
     
     func stop(){
-        print("stop timer!")
+//        print("stop timer!")
         timer?.cancel()
         timer = nil
     }
@@ -36,6 +37,9 @@ class TimerModel: ObservableObject{
     func getMMSS() -> String{
         let mm = count / 60
         let ss = count % 60
+        
+        print("getMMSS()")
+        
         return String(format: "%02d:%02d", mm, ss)
     }
 }

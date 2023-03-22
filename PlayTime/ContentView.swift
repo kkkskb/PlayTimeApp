@@ -11,26 +11,71 @@ struct Player:Identifiable{
     var id = UUID()
     var number: Int
     var name: String
-    var flags: Bool
-    
-    init(number:Int , name:String , flags:Bool){
-        self.number = number
-        self.name = name
-        self.flags = flags
-    }
+    var flag: Bool = false
+    @ObservedObject var timer = TimerModel()
+
+    //    init(number:Int , name:String , flags:Bool){
+//        self.number = number
+//        self.name = name
+//        self.flags = flags
+//    }
 }
 
 class PlayerModel:ObservableObject{
     @Published var people:[Player]
+    
     init(){
         self.people = [
-            Player(number: 1, name: "石井 洸一", flags: false),
-            Player(number: 5, name: " 小川 大介", flags: true),
-            Player(number: 9, name: "松尾 昴太郎", flags: false),
-            Player(number: 12, name: "松川 隆太", flags: false),
-            Player(number: 13, name: "坂本 飛鳥", flags: false),
-            Player(number: 17, name: "日下部 洸希", flags: false)]
+            Player(number: 2, name: "坂本 飛鳥"),
+            Player(number: 5, name: "関根 拓真"),
+            Player(number: 7, name: "田村 郁也"),
+            Player(number: 9, name: "松尾 昂太郎"),
+            Player(number: 10, name: "小川 大介"),
+            Player(number: 19, name: "石井 洸一"),
+            Player(number: 25, name: "掛谷 修造"),
+            Player(number: 37, name: "清水 太一"),
+            Player(number: 41, name: "林 宏季"),
+            Player(number: 51, name: "日下部 洸希"),
+            Player(number: 55, name: "渡部 巧巳"),
+            Player(number: 81, name: "松川 隆太")]
         
+    }
+}
+//ボタンclass
+struct FloatingButton: View {
+    @State var isCounting = false
+    @ObservedObject var players:PlayerModel
+
+    
+    var body: some View {
+        Button(action: {
+            isCounting.toggle()
+                if isCounting {
+                    for i in players.people.indices{
+                        if players.people[i].flag {
+                            players.people[i].timer.start()
+                        }
+                    }
+                }else {
+                    for i in players.people.indices{
+                        players.people[i].timer.stop()
+                    }
+                }
+        }, label: {
+            HStack {
+                Spacer()
+                Image(systemName: "stopwatch")
+                    .imageScale(.small)
+                    .foregroundColor((isCounting) ? .white : .black)
+                    .font(.system(size: 30))
+                Text((isCounting) ? "Tap to Stop" : "Tap to Start")
+                    .foregroundColor((isCounting) ? .white : .black)
+                .shadow(radius: 10)
+                Spacer()
+            }
+            .padding()
+
+        }).listRowBackground((isCounting) ? Color.black : Color.white)
     }
 }
 
@@ -38,34 +83,32 @@ class PlayerModel:ObservableObject{
 
 struct PlayerListView: View {
     @ObservedObject var playerModel:PlayerModel = PlayerModel()
-    @State var flg : Bool = false
+
+    
     var body: some View {
         VStack{
             List{
-                Section(header: Text("北海道大学").font(.title)){
+                Section(header: Text("北海道大学(リバ)").font(.title)){
                     ForEach(playerModel.people.indices, id: \.self){ num in
                         HStack{
                             Text("#"+String(playerModel.people[num].number))
                             Text(playerModel.people[num].name)
                             Spacer()
-                            Button(String(playerModel.people[num].flags)){
-                                playerModel.people[num].flags.toggle()
+                            Text(String(playerModel.people[num].timer.getMMSS()))
+                 
+                            
+                            Button(String(playerModel.people[num].flag)){
+                                playerModel.people[num].flag.toggle()
                             }.buttonStyle(BorderlessButtonStyle())
                             
                         }
                     }.listStyle(SidebarListStyle())
                 }
-                //                Section(header: Text("出場中").font(.title)){
-                //                    ForEach(onPlayMenbers, id:\.self){player in
-                //                        HStack{
-                //                            Text("#"+String(player.number))
-                //                            Text(player.name)
-                //                        }
-                //
-                //                    }
-                //                }
+                FloatingButton(players: playerModel)
                 
             }
+            
+            
         }
     }
 }
