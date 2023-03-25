@@ -38,10 +38,19 @@ class TimerModel: ObservableObject{
         let mm = count / 60
         let ss = count % 60
         
-        print("getMMSS()")
+        // print("getMMSS()")
         
         return String(format: "%02d:%02d", mm, ss)
     }
+
+    func minus(num: Int){
+        count -= num
+    }
+
+    func plus(num: Int){
+        count += num
+    }
+
 }
 
 
