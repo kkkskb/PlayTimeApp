@@ -88,7 +88,7 @@ struct MinusButton: View {
         }, label: {
             Image(systemName: "gobackward.5")
                 .imageScale(.small)
-                .foregroundColor(.black)
+                .foregroundColor(Color(UIColor.label))
                 .font(.system(size: 30))
         }).buttonStyle(BorderlessButtonStyle())
     }
@@ -108,12 +108,13 @@ struct PlusButton: View {
         }, label: {
             Image(systemName: "goforward.5")
                 .imageScale(.small)
-                .foregroundColor(.black)
+                .foregroundColor(Color(UIColor.label))
                 .font(.system(size: 30))
         }).buttonStyle(BorderlessButtonStyle())
     }
 }
 
+//コピーボタン
 struct CopyButton: View {
     let playerModel:PlayerModel
 
@@ -145,7 +146,7 @@ struct CopyButton: View {
                 }, label: {
             Image(systemName: "doc.on.doc")
                 .imageScale(.small)
-                .foregroundColor(.black)
+                .foregroundColor(Color(UIColor.label))
                 .font(.system(size: 30))
         }).buttonStyle(BorderlessButtonStyle())
     }
