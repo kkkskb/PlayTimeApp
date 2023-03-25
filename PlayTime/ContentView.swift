@@ -12,7 +12,9 @@ struct Player:Identifiable{
     var number: Int
     var name: String
     var flag: Bool = false
-    @ObservedObject var timer = TimerModel()
+    @ObservedObject var timer:TimerModel = TimerModel()
+
+
 
     //    init(number:Int , name:String , flags:Bool){
 //        self.number = number
@@ -81,9 +83,9 @@ struct FloatingButton: View {
 
 
 
+
 struct PlayerListView: View {
     @ObservedObject var playerModel:PlayerModel = PlayerModel()
-
     
     var body: some View {
         VStack{
@@ -94,8 +96,8 @@ struct PlayerListView: View {
                             Text("#"+String(playerModel.people[num].number))
                             Text(playerModel.people[num].name)
                             Spacer()
-                            Text(String(playerModel.people[num].timer.getMMSS()))
-                 
+                            
+                            GetMMSSView(timer: playerModel.people[num].timer)
                             
                             Button(String(playerModel.people[num].flag)){
                                 playerModel.people[num].flag.toggle()
@@ -123,5 +125,15 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+    }
+}
+
+
+struct GetMMSSView: View {
+    
+    @ObservedObject var timer:TimerModel
+    
+    var body: some View {
+        Text(String(timer.getMMSS()))
     }
 }
