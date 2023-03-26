@@ -40,7 +40,7 @@ class PlayerModel:ObservableObject{
 
 //スタートストップボタン
 struct StartStopButton: View {
-    @State var isCounting: Bool
+    @Binding var isCounting: Bool
     @ObservedObject var playerModel: PlayerModel
     
     
@@ -126,8 +126,8 @@ struct CopyButton: View {
             for i in playerModel.people.indices{
                 // 名前を強制的に7文字に満たす
                 var name = playerModel.people[i].name
-                if name.count < 7 {
-                    for _ in 0..<(7 - name.count){
+                if name.count < 6 {
+                    for _ in 0..<(6 - name.count){
                         name += "  "
                     }
                 }
@@ -153,7 +153,7 @@ struct CopyButton: View {
 }
 
 struct GetMMSSView: View {
-    var isCounting: Bool
+    @Binding var isCounting: Bool
     var player: Player
     @ObservedObject var timer: TimerModel
     
@@ -163,6 +163,7 @@ struct GetMMSSView: View {
             // 文字の背景を緑にして、文字を白にする
             Text(String(timer.getMMSS()))
                 .foregroundColor(Color(UIColor.systemBackground))
+                .frame(width:55,height:25)
                 .background(Color(UIColor.systemGreen))
                 .cornerRadius(5)
         }else {
@@ -197,7 +198,7 @@ struct PlayerListView: View {
                             Text(playerModel.people[num].name)
                             Spacer()
                             
-                            GetMMSSView(isCounting: isCounting,player: playerModel.people[num], timer: playerModel.people[num].timer)
+                            GetMMSSView(isCounting: $isCounting,player: playerModel.people[num], timer: playerModel.people[num].timer)
                         }
                     }.listStyle(SidebarListStyle())
                 }
@@ -206,7 +207,7 @@ struct PlayerListView: View {
                         Spacer()
                         MinusButton(playerModel: playerModel)
                         Spacer()
-                        StartStopButton(isCounting: isCounting,playerModel: playerModel)
+                        StartStopButton(isCounting: $isCounting,playerModel: playerModel)
                         Spacer()
                         PlusButton(playerModel: playerModel)
                         Spacer()
