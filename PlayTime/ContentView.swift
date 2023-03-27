@@ -12,7 +12,7 @@ struct Player:Identifiable{
     var number: String
     var name: String
     var flag: Bool = false
-    @ObservedObject var timer:TimerModel = TimerModel()
+    @ObservedObject var timer:TimerModel = TimerModel(count: 0)
 }
 
 class PlayerModel:ObservableObject{
@@ -31,29 +31,32 @@ class PlayerModel:ObservableObject{
             Player(number: "41", name: "林 宏季"),
             Player(number: "51", name: "日下部 洸希"),
             Player(number: "55", name: "渡部 巧巳"),
-            Player(number: "81", name: "松川 隆太")]
-        
-    }
-    
-    
+            Player(number: "81", name: "松川 隆太"),
+            Player(number: "??", name: "渡辺 大翔")]
+    }  
 }
+
+
 
 //スタートストップボタン
 struct StartStopButton: View {
     @Binding var isCounting: Bool
     @ObservedObject var playerModel: PlayerModel
+    @ObservedObject var gameTimer: TimerModel
     
     
     var body: some View {
         Button(action: {
             isCounting.toggle()
             if isCounting {
+                gameTimer.countDownStart()
                 for i in playerModel.people.indices{
                     if playerModel.people[i].flag {
                         playerModel.people[i].timer.start()
                     }
                 }
             }else {
+                gameTimer.stop()
                 for i in playerModel.people.indices{
                     playerModel.people[i].timer.stop()
                 }
@@ -76,13 +79,15 @@ struct StartStopButton: View {
 // minusボタン
 struct MinusButton: View {
     @ObservedObject var playerModel:PlayerModel
+    @ObservedObject var gameTimer: TimerModel
 
     
     var body: some View {
         Button(action: {
+            gameTimer.minus(num: 5)
             for i in playerModel.people.indices{
                 if playerModel.people[i].flag {
-                    playerModel.people[i].timer.minus(num: 5)
+                    playerModel.people[i].timer.plus(num: 5)
                 }
             }
         }, label: {
@@ -97,12 +102,14 @@ struct MinusButton: View {
 // plusボタン
 struct PlusButton: View {
     @ObservedObject var playerModel:PlayerModel
+    @ObservedObject var gameTimer: TimerModel
     
     var body: some View {
         Button(action: {
+            gameTimer.plus(num: 5)
             for i in playerModel.people.indices{
                 if playerModel.people[i].flag {
-                    playerModel.people[i].timer.plus(num: 5)
+                    playerModel.people[i].timer.minus(num: 5)
                 }
             }
         }, label: {
@@ -138,7 +145,7 @@ struct CopyButton: View {
             let scenes = UIApplication.shared.connectedScenes
             let windowScene = scenes.first as? UIWindowScene
             let window = windowScene?.windows.first
-            let alert = UIAlertController(title: "テキストをコピーしました", message: nil, preferredStyle: .alert)
+            let alert = UIAlertController(title: "コピーしました", message: nil, preferredStyle: .alert)
             window?.rootViewController?.present(alert, animated: true, completion: nil)
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 alert.dismiss(animated: true, completion: nil)
@@ -151,6 +158,23 @@ struct CopyButton: View {
         }).buttonStyle(BorderlessButtonStyle())
     }
 }
+
+// gameTimer.count=600に戻すリセットボタンを作成
+struct ResetButton: View {
+    @ObservedObject var gameTimer: TimerModel
+    
+    var body: some View {
+        Button(action: {
+            gameTimer.reset(num: 600)
+        }, label: {
+            Image(systemName: "arrow.counterclockwise")
+                .imageScale(.small)
+                .foregroundColor(Color(UIColor.label))
+                .font(.system(size: 30))
+        }).buttonStyle(BorderlessButtonStyle())
+    }
+}
+
 
 struct GetMMSSView: View {
     @Binding var isCounting: Bool
@@ -173,10 +197,38 @@ struct GetMMSSView: View {
     }
 }
 
+struct GetGameTimeMMSSView: View {
+    @Binding var isCounting: Bool
+    @ObservedObject var gameTimer: TimerModel = TimerModel(count: 600)
+    
+    var body: some View {
+
+        if isCounting {
+            Text(String(gameTimer.getMMSS()))
+                .font(.custom("DSEG14Classic-Regular", size: 40))
+                .foregroundColor(Color(UIColor.label))
+                .frame(maxWidth: .infinity,alignment: .center)
+                .underline(color: .green)
+//                .foregroundColor(Color(UIColor.systemBackground))
+//                .background(Color(UIColor.systemGreen))
+//                .cornerRadius(5)
+//                .frame(maxWidth: .infinity,maxHeight: 100,alignment: .center)
+        }else{
+            Text(String(gameTimer.getMMSS()))
+                .font(.custom("DSEG14Classic-Regular", size: 40))
+                .foregroundColor(Color(UIColor.label))
+                .frame(maxWidth: .infinity,alignment: .center)
+        }
+
+        
+    }
+}
+
 
 struct PlayerListView: View {
     @ObservedObject var playerModel:PlayerModel = PlayerModel()
     @State var isCounting: Bool = false
+    @ObservedObject var gameTimer: TimerModel = TimerModel(count: 600)
     
     var body: some View {
         NavigationStack(){
@@ -193,7 +245,7 @@ struct PlayerListView: View {
                                     .imageScale(.small)
                                     .foregroundColor((playerModel.people[num].flag) ? .green : .gray)
                                     .font(.system(size: 30))
-                            }).buttonStyle(BorderlessButtonStyle())
+                            })//.buttonStyle(BorderlessButtonStyle())
                             Text("#"+String(playerModel.people[num].number))
                             Text(playerModel.people[num].name)
                             Spacer()
@@ -203,14 +255,22 @@ struct PlayerListView: View {
                     }.listStyle(SidebarListStyle())
                 }
                 Section(){
-                    HStack{
-                        Spacer()
-                        MinusButton(playerModel: playerModel)
-                        Spacer()
-                        StartStopButton(isCounting: $isCounting,playerModel: playerModel)
-                        Spacer()
-                        PlusButton(playerModel: playerModel)
-                        Spacer()
+                    VStack {
+                        HStack {
+                            Spacer(minLength: 40)
+                            GetGameTimeMMSSView(isCounting: $isCounting, gameTimer: gameTimer)
+                            ResetButton(gameTimer: gameTimer)
+                            Spacer()
+                        }
+                        HStack{
+                            Spacer()
+                            MinusButton(playerModel: playerModel,gameTimer: gameTimer)
+                            Spacer()
+                            StartStopButton(isCounting: $isCounting,playerModel: playerModel,gameTimer: gameTimer)
+                            Spacer()
+                            PlusButton(playerModel: playerModel,gameTimer: gameTimer)
+                            Spacer()
+                        }
                     }
                 }
                 

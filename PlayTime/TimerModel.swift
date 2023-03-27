@@ -9,8 +9,12 @@ import Foundation
 import Combine
 
 class TimerModel: ObservableObject{
-    @Published var count: Int = 0
+    @Published var count: Int
     @Published var timer: AnyCancellable!
+    
+    init(count: Int) {
+        self.count = count
+    }
 
     func start(_ interval: Double = 1.0){
         print("start timer!")
@@ -25,7 +29,26 @@ class TimerModel: ObservableObject{
             .sink(receiveValue: ({_ in
                 self.count += 1
             }))
-//        print("timer loading!")
+    }
+    
+//    カウントダウンする関数 countDownStart()
+    func countDownStart(_ interval: Double = 1.0){
+        print("start timer!")
+
+        if let _timer = timer{
+            _timer.cancel()
+        }
+
+        timer = Timer.publish(every: interval, on: .main, in: .common)
+            .autoconnect()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: ({_ in
+                self.count -= 1
+            }))
+    }
+    
+    func reset(num: Int) {
+        count = num
     }
     
     func stop(){
