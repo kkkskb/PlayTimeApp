@@ -19,20 +19,57 @@ class PlayerModel:ObservableObject{
     @Published var people:[Player]
     
     init(){
+        
+        
         self.people = [
-            Player(number: "02", name: "坂本 飛鳥"),
-            Player(number: "05", name: "関根 拓真"),
+            Player(number: "01", name: "石井 洸一"),
+            Player(number: "05", name: "小川 大介"),
             Player(number: "07", name: "田村 郁也"),
             Player(number: "09", name: "松尾 昂太郎"),
-            Player(number: "10", name: "小川 大介"),
-            Player(number: "19", name: "石井 洸一"),
+            Player(number: "11", name: "五十嵐 晴彦"),
+            Player(number: "12", name: "松川 隆太"),
+            Player(number: "13", name: "坂本 飛鳥"),
+            Player(number: "16", name: "南 淳青"),
+            Player(number: "17", name: "日下部 洸希"),
             Player(number: "25", name: "掛谷 修造"),
+            Player(number: "28", name: "関根 拓真"),
+            Player(number: "32", name: "渡部 巧巳"),
             Player(number: "37", name: "清水 太一"),
             Player(number: "41", name: "林 宏季"),
-            Player(number: "51", name: "日下部 洸希"),
-            Player(number: "55", name: "渡部 巧巳"),
-            Player(number: "81", name: "松川 隆太"),
-            Player(number: "??", name: "渡辺 大翔")]
+            Player(number: "51", name: "伊藤 洵弥"),
+            Player(number: "55", name: "浦田 航志"),
+            Player(number: "58", name: "本多 勇聖"),
+            Player(number: "77", name: "松浪 昌飛"),
+            Player(number: "92", name: "田上 晃大"),
+            Player(number: "95", name: "渡辺 大翔"),
+            Player(number: "   ", name: "中野 ハルト"),
+            Player(number: "   ", name: "池田 航基")
+            ]
+        
+//        self.people = [
+//            Player(number: "   ", name: "渡辺 大翔"),
+//            Player(number: "97", name: "松浪 昌飛"),
+//            Player(number: "   ", name: "本多 勇聖"),
+//            Player(number: "   ", name: "中野 ハルト"),
+//            Player(number: "   ", name: "池田 航基"),
+//            Player(number: "   ", name: "うらた こうじ"),
+//            Player(number: "   ", name: "伊藤 洵弥"),
+//            Player(number: "   ", name: "田上 晃大"),
+//            Player(number: "   ", name: "五十嵐 晴彦"),
+//            Player(number: "   ", name: "南 じゅんせい"),
+//            Player(number: "02", name: "坂本 飛鳥"),
+//            Player(number: "05", name: "関根 拓真"),
+//            Player(number: "07", name: "田村 郁也"),
+//            Player(number: "09", name: "松尾 昂太郎"),
+//            Player(number: "10", name: "小川 大介"),
+//            Player(number: "19", name: "石井 洸一"),
+//            Player(number: "25", name: "掛谷 修造"),
+//            Player(number: "37", name: "清水 太一"),
+//            Player(number: "41", name: "林 宏季"),
+//            Player(number: "51", name: "日下部 洸希"),
+//            Player(number: "55", name: "渡部 巧巳"),
+//            Player(number: "81", name: "松川 隆太")
+//            ]
     }  
 }
 
@@ -252,7 +289,7 @@ struct PlayerListView: View {
                             
                             GetMMSSView(isCounting: $isCounting,player: playerModel.people[num], timer: playerModel.people[num].timer)
                         }
-                    }.listStyle(SidebarListStyle())
+                    }
                 }
                 Section(){
                     VStack {
@@ -274,7 +311,7 @@ struct PlayerListView: View {
                     }
                 }
                 
-            }
+            }.listStyle(SidebarListStyle())
             .navigationTitle("北海道大学(リバ)")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarItems(trailing: CopyButton(playerModel: playerModel))
