@@ -11,7 +11,7 @@ import SwiftUI
 struct PlayTimeApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            PlayerListView()
         }
     }
 }

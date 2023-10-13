@@ -9,8 +9,12 @@ import Foundation
 import Combine
 
 class TimerModel: ObservableObject{
-    @Published var count: Int = 0
+    @Published var count: Int
     @Published var timer: AnyCancellable!
+    
+    init(count: Int) {
+        self.count = count
+    }
 
     func start(_ interval: Double = 1.0){
         print("start timer!")
@@ -27,8 +31,28 @@ class TimerModel: ObservableObject{
             }))
     }
     
+//    カウントダウンする関数 countDownStart()
+    func countDownStart(_ interval: Double = 1.0){
+        print("start timer!")
+
+        if let _timer = timer{
+            _timer.cancel()
+        }
+
+        timer = Timer.publish(every: interval, on: .main, in: .common)
+            .autoconnect()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: ({_ in
+                self.count -= 1
+            }))
+    }
+    
+    func reset(num: Int) {
+        count = num
+    }
+    
     func stop(){
-        print("stop timer!")
+//        print("stop timer!")
         timer?.cancel()
         timer = nil
     }
@@ -36,8 +60,20 @@ class TimerModel: ObservableObject{
     func getMMSS() -> String{
         let mm = count / 60
         let ss = count % 60
+        
+        // print("getMMSS()")
+        
         return String(format: "%02d:%02d", mm, ss)
     }
+
+    func minus(num: Int){
+        count -= num
+    }
+
+    func plus(num: Int){
+        count += num
+    }
+
 }
 
 

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E718BF7A29C4CB3900515E9E /* TimerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E718BF7929C4CB3900515E9E /* TimerModel.swift */; };
+		E773643629D1F95600772918 /* DSEG14Classic-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E773643529D1F95600772918 /* DSEG14Classic-Regular.ttf */; };
 		E79D8C7529C3018D008954F7 /* PlayTimeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79D8C7429C3018D008954F7 /* PlayTimeApp.swift */; };
 		E79D8C7729C3018D008954F7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79D8C7629C3018D008954F7 /* ContentView.swift */; };
 		E79D8C7929C3018F008954F7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E79D8C7829C3018F008954F7 /* Assets.xcassets */; };
@@ -16,6 +17,8 @@
 
 /* Begin PBXFileReference section */
 		E718BF7929C4CB3900515E9E /* TimerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerModel.swift; sourceTree = "<group>"; };
+		E773643529D1F95600772918 /* DSEG14Classic-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "DSEG14Classic-Regular.ttf"; sourceTree = "<group>"; };
+		E773643729D1FA9600772918 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		E79D8C7129C3018D008954F7 /* PlayTime.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlayTime.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E79D8C7429C3018D008954F7 /* PlayTimeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayTimeApp.swift; sourceTree = "<group>"; };
 		E79D8C7629C3018D008954F7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -53,9 +56,11 @@
 		E79D8C7329C3018D008954F7 /* PlayTime */ = {
 			isa = PBXGroup;
 			children = (
+				E773643729D1FA9600772918 /* Info.plist */,
 				E79D8C7429C3018D008954F7 /* PlayTimeApp.swift */,
 				E79D8C7629C3018D008954F7 /* ContentView.swift */,
 				E718BF7929C4CB3900515E9E /* TimerModel.swift */,
+				E773643529D1F95600772918 /* DSEG14Classic-Regular.ttf */,
 				E79D8C7829C3018F008954F7 /* Assets.xcassets */,
 				E79D8C7A29C3018F008954F7 /* Preview Content */,
 			);
@@ -130,6 +135,7 @@
 			files = (
 				E79D8C7C29C3018F008954F7 /* Preview Assets.xcassets in Resources */,
 				E79D8C7929C3018F008954F7 /* Assets.xcassets in Resources */,
+				E773643629D1F95600772918 /* DSEG14Classic-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -274,6 +280,7 @@
 				DEVELOPMENT_TEAM = L2ZQM9TJ8C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PlayTime/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -303,6 +310,7 @@
 				DEVELOPMENT_TEAM = L2ZQM9TJ8C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PlayTime/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

@@ -9,76 +9,319 @@ import SwiftUI
 
 struct Player:Identifiable{
     var id = UUID()
-    var number: Int
+    var number: String
     var name: String
-    var flags: Bool
-    
-    init(number:Int , name:String , flags:Bool){
-        self.number = number
-        self.name = name
-        self.flags = flags
-    }
+    var flag: Bool = false
+    @ObservedObject var timer:TimerModel = TimerModel(count: 0)
 }
 
 class PlayerModel:ObservableObject{
     @Published var people:[Player]
+    
     init(){
+        
+        
         self.people = [
-            Player(number: 1, name: "石井 洸一", flags: false),
-            Player(number: 5, name: " 小川 大介", flags: true),
-            Player(number: 9, name: "松尾 昴太郎", flags: false),
-            Player(number: 12, name: "松川 隆太", flags: false),
-            Player(number: 13, name: "坂本 飛鳥", flags: false),
-            Player(number: 17, name: "日下部 洸希", flags: false)]
+            Player(number: "01", name: "石井 洸一"),
+            Player(number: "05", name: "小川 大介"),
+            Player(number: "07", name: "田村 郁也"),
+            Player(number: "09", name: "松尾 昂太郎"),
+            Player(number: "11", name: "五十嵐 晴彦"),
+            Player(number: "12", name: "松川 隆太"),
+            Player(number: "13", name: "坂本 飛鳥"),
+            Player(number: "16", name: "南 淳青"),
+            Player(number: "17", name: "日下部 洸希"),
+            Player(number: "25", name: "掛谷 修造"),
+            Player(number: "28", name: "関根 拓真"),
+            Player(number: "32", name: "渡部 巧巳"),
+            Player(number: "37", name: "清水 太一"),
+            Player(number: "41", name: "林 宏季"),
+            Player(number: "51", name: "伊藤 洵弥"),
+            Player(number: "55", name: "浦田 航志"),
+            Player(number: "58", name: "本多 勇聖"),
+            Player(number: "77", name: "松浪 昌飛"),
+            Player(number: "92", name: "田上 晃大"),
+            Player(number: "95", name: "渡辺 大翔"),
+            Player(number: "   ", name: "中野 ハルト"),
+            Player(number: "   ", name: "池田 航基")
+            ]
+        
+//        self.people = [
+//            Player(number: "   ", name: "渡辺 大翔"),
+//            Player(number: "97", name: "松浪 昌飛"),
+//            Player(number: "   ", name: "本多 勇聖"),
+//            Player(number: "   ", name: "中野 ハルト"),
+//            Player(number: "   ", name: "池田 航基"),
+//            Player(number: "   ", name: "うらた こうじ"),
+//            Player(number: "   ", name: "伊藤 洵弥"),
+//            Player(number: "   ", name: "田上 晃大"),
+//            Player(number: "   ", name: "五十嵐 晴彦"),
+//            Player(number: "   ", name: "南 じゅんせい"),
+//            Player(number: "02", name: "坂本 飛鳥"),
+//            Player(number: "05", name: "関根 拓真"),
+//            Player(number: "07", name: "田村 郁也"),
+//            Player(number: "09", name: "松尾 昂太郎"),
+//            Player(number: "10", name: "小川 大介"),
+//            Player(number: "19", name: "石井 洸一"),
+//            Player(number: "25", name: "掛谷 修造"),
+//            Player(number: "37", name: "清水 太一"),
+//            Player(number: "41", name: "林 宏季"),
+//            Player(number: "51", name: "日下部 洸希"),
+//            Player(number: "55", name: "渡部 巧巳"),
+//            Player(number: "81", name: "松川 隆太")
+//            ]
+    }  
+}
+
+
+
+//スタートストップボタン
+struct StartStopButton: View {
+    @Binding var isCounting: Bool
+    @ObservedObject var playerModel: PlayerModel
+    @ObservedObject var gameTimer: TimerModel
+    
+    
+    var body: some View {
+        Button(action: {
+            isCounting.toggle()
+            if isCounting {
+                gameTimer.countDownStart()
+                for i in playerModel.people.indices{
+                    if playerModel.people[i].flag {
+                        playerModel.people[i].timer.start()
+                    }
+                }
+            }else {
+                gameTimer.stop()
+                for i in playerModel.people.indices{
+                    playerModel.people[i].timer.stop()
+                }
+            }
+        }, label: {
+            HStack {
+                Spacer()
+                Image(systemName: (isCounting) ?  "pause.fill" : "arrowtriangle.forward.fill" )
+                    .imageScale(.small)
+                    .foregroundColor(Color(UIColor.label))
+                    .font(.system(size: 60))
+                Spacer()
+            }
+            .padding()
+            
+        }).buttonStyle(BorderlessButtonStyle())
+    }
+}
+
+// minusボタン
+struct MinusButton: View {
+    @ObservedObject var playerModel:PlayerModel
+    @ObservedObject var gameTimer: TimerModel
+
+    
+    var body: some View {
+        Button(action: {
+            gameTimer.minus(num: 5)
+            for i in playerModel.people.indices{
+                if playerModel.people[i].flag {
+                    playerModel.people[i].timer.plus(num: 5)
+                }
+            }
+        }, label: {
+            Image(systemName: "gobackward.5")
+                .imageScale(.small)
+                .foregroundColor(Color(UIColor.label))
+                .font(.system(size: 30))
+        }).buttonStyle(BorderlessButtonStyle())
+    }
+}
+
+// plusボタン
+struct PlusButton: View {
+    @ObservedObject var playerModel:PlayerModel
+    @ObservedObject var gameTimer: TimerModel
+    
+    var body: some View {
+        Button(action: {
+            gameTimer.plus(num: 5)
+            for i in playerModel.people.indices{
+                if playerModel.people[i].flag {
+                    playerModel.people[i].timer.minus(num: 5)
+                }
+            }
+        }, label: {
+            Image(systemName: "goforward.5")
+                .imageScale(.small)
+                .foregroundColor(Color(UIColor.label))
+                .font(.system(size: 30))
+        }).buttonStyle(BorderlessButtonStyle())
+    }
+}
+
+//コピーボタン
+struct CopyButton: View {
+    let playerModel:PlayerModel
+
+    var body: some View {
+        Button(action: {
+            // playerModelのpeopleをクリップボードにコピー
+            let pasteboard = UIPasteboard.general
+            var str:String = ""
+            for i in playerModel.people.indices{
+                // 名前を強制的に7文字に満たす
+                var name = playerModel.people[i].name
+                if name.count < 6 {
+                    for _ in 0..<(6 - name.count){
+                        name += "  "
+                    }
+                }
+                str += "#" + String(playerModel.people[i].number) + " " + name + " " + String(playerModel.people[i].timer.getMMSS()) + "\n"
+            }
+            pasteboard.string = str
+            // クリップボードにコピーしたことをウィンドウで通知する
+            let scenes = UIApplication.shared.connectedScenes
+            let windowScene = scenes.first as? UIWindowScene
+            let window = windowScene?.windows.first
+            let alert = UIAlertController(title: "コピーしました", message: nil, preferredStyle: .alert)
+            window?.rootViewController?.present(alert, animated: true, completion: nil)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                alert.dismiss(animated: true, completion: nil)
+            }
+                }, label: {
+            Image(systemName: "doc.on.doc")
+                .imageScale(.small)
+                .foregroundColor(Color(UIColor.label))
+                .font(.system(size: 30))
+        }).buttonStyle(BorderlessButtonStyle())
+    }
+}
+
+// gameTimer.count=600に戻すリセットボタンを作成
+struct ResetButton: View {
+    @ObservedObject var gameTimer: TimerModel
+    
+    var body: some View {
+        Button(action: {
+            gameTimer.reset(num: 600)
+        }, label: {
+            Image(systemName: "arrow.counterclockwise")
+                .imageScale(.small)
+                .foregroundColor(Color(UIColor.label))
+                .font(.system(size: 30))
+        }).buttonStyle(BorderlessButtonStyle())
+    }
+}
+
+
+struct GetMMSSView: View {
+    @Binding var isCounting: Bool
+    var player: Player
+    @ObservedObject var timer: TimerModel
+    
+    var body: some View {
+        
+        if player.flag && isCounting {
+            // 文字の背景を緑にして、文字を白にする
+            Text(String(timer.getMMSS()))
+                .foregroundColor(Color(UIColor.systemBackground))
+                .frame(width:55,height:25)
+                .background(Color(UIColor.systemGreen))
+                .cornerRadius(5)
+        }else {
+            Text(String(timer.getMMSS()))
+                .foregroundColor(Color(UIColor.label))
+        }
+    }
+}
+
+struct GetGameTimeMMSSView: View {
+    @Binding var isCounting: Bool
+    @ObservedObject var gameTimer: TimerModel = TimerModel(count: 600)
+    
+    var body: some View {
+
+        if isCounting {
+            Text(String(gameTimer.getMMSS()))
+                .font(.custom("DSEG14Classic-Regular", size: 40))
+                .foregroundColor(Color(UIColor.label))
+                .frame(maxWidth: .infinity,alignment: .center)
+                .underline(color: .green)
+//                .foregroundColor(Color(UIColor.systemBackground))
+//                .background(Color(UIColor.systemGreen))
+//                .cornerRadius(5)
+//                .frame(maxWidth: .infinity,maxHeight: 100,alignment: .center)
+        }else{
+            Text(String(gameTimer.getMMSS()))
+                .font(.custom("DSEG14Classic-Regular", size: 40))
+                .foregroundColor(Color(UIColor.label))
+                .frame(maxWidth: .infinity,alignment: .center)
+        }
+
         
     }
 }
 
 
-
 struct PlayerListView: View {
     @ObservedObject var playerModel:PlayerModel = PlayerModel()
-    @State var flg : Bool = false
+    @State var isCounting: Bool = false
+    @ObservedObject var gameTimer: TimerModel = TimerModel(count: 600)
+    
     var body: some View {
-        VStack{
+        NavigationStack(){
             List{
-                Section(header: Text("北海道大学").font(.title)){
+                Section(){
                     ForEach(playerModel.people.indices, id: \.self){ num in
                         HStack{
+                            Button(action: {
+                                playerModel.people[num].flag.toggle()
+                                
+                            }
+                                ,label: {
+                                Image(systemName: (playerModel.people[num].flag) ? "checkmark.circle.fill" : "circle")
+                                    .imageScale(.small)
+                                    .foregroundColor((playerModel.people[num].flag) ? .green : .gray)
+                                    .font(.system(size: 30))
+                            })//.buttonStyle(BorderlessButtonStyle())
                             Text("#"+String(playerModel.people[num].number))
                             Text(playerModel.people[num].name)
                             Spacer()
-                            Button(String(playerModel.people[num].flags)){
-                                playerModel.people[num].flags.toggle()
-                            }.buttonStyle(BorderlessButtonStyle())
                             
+                            GetMMSSView(isCounting: $isCounting,player: playerModel.people[num], timer: playerModel.people[num].timer)
                         }
-                    }.listStyle(SidebarListStyle())
+                    }
                 }
-                //                Section(header: Text("出場中").font(.title)){
-                //                    ForEach(onPlayMenbers, id:\.self){player in
-                //                        HStack{
-                //                            Text("#"+String(player.number))
-                //                            Text(player.name)
-                //                        }
-                //
-                //                    }
-                //                }
+                Section(){
+                    VStack {
+                        HStack {
+                            Spacer(minLength: 40)
+                            GetGameTimeMMSSView(isCounting: $isCounting, gameTimer: gameTimer)
+                            ResetButton(gameTimer: gameTimer)
+                            Spacer()
+                        }
+                        HStack{
+                            Spacer()
+                            MinusButton(playerModel: playerModel,gameTimer: gameTimer)
+                            Spacer()
+                            StartStopButton(isCounting: $isCounting,playerModel: playerModel,gameTimer: gameTimer)
+                            Spacer()
+                            PlusButton(playerModel: playerModel,gameTimer: gameTimer)
+                            Spacer()
+                        }
+                    }
+                }
                 
-            }
+            }.listStyle(SidebarListStyle())
+            .navigationTitle("北海道大学(リバ)")
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarItems(trailing: CopyButton(playerModel: playerModel))
         }
+        
     }
 }
 
-struct ContentView: View {
-    var body: some View {
-        PlayerListView()
-    }
-}
-
-
-struct ContentView_Previews: PreviewProvider {
+struct PlayerListView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        PlayerListView()
     }
 }
